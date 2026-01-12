@@ -7,6 +7,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         chrome.runtime.sendMessage({
             action: "linkResolved",
             destinationUrl: result.destinationUrl,
+            proxyUrl: result.proxyUrl,
             title: result.title,
             description: result.description
         });
@@ -14,6 +15,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         chrome.runtime.sendMessage({
             action: "linkResolved",
             destinationUrl: targetUrl,
+            proxyUrl: "",
             title: "",
             description: "Could not resolve link"
         });
@@ -63,7 +65,7 @@ async function resolveShortUrl(url) {
             }
         }
 
-        return { destinationUrl, title, description };
+        return { destinationUrl, proxyUrl, title, description };
     }
 
     throw new Error("Failed to resolve URL");

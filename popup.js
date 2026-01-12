@@ -8,6 +8,7 @@ const scanServices = [
 ];
 
 let currentDestinationUrl = "";
+let currentProxyUrl = "";
 let currentShortUrl = "";
 
 document.getElementById("go").addEventListener("click", () => {
@@ -26,14 +27,16 @@ document.getElementById("url").addEventListener("keypress", (e) => {
 });
 
 document.getElementById("openBtn").addEventListener("click", () => {
-    if (currentDestinationUrl) {
-        chrome.tabs.create({ url: currentDestinationUrl });
+    const urlToOpen = currentProxyUrl || currentDestinationUrl;
+    if (urlToOpen) {
+        chrome.tabs.create({ url: urlToOpen });
     }
 });
 
 chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "linkResolved") {
         currentDestinationUrl = message.destinationUrl;
+        currentProxyUrl = message.proxyUrl;
         showResults(message.destinationUrl, message.title, message.description);
     }
 });
