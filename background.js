@@ -15,10 +15,7 @@ chrome.runtime.onMessage.addListener((message) => {
                         const isMainPage = currentUrl === "https://www.croxyproxy.com/" ||
                                           currentUrl === "https://www.croxyproxy.com";
 
-                        const isServersPage = currentUrl.includes("croxyproxy.com/servers");
-
                         const isCroxyDomain = currentUrl.includes("croxyproxy.com");
-
                         const isExtensionPage = currentUrl.startsWith("chrome-extension://");
 
                         if (!scriptInjected && isMainPage) {
@@ -33,8 +30,8 @@ chrome.runtime.onMessage.addListener((message) => {
 
                         if (scriptInjected && !isCroxyDomain && !isExtensionPage && currentUrl !== "") {
                             chrome.tabs.onUpdated.removeListener(listener);
-                            chrome.tabs.remove(loadingTab.id);
-                            chrome.tabs.update(proxyTab.id, { active: true });
+                            chrome.tabs.remove(proxyTab.id);
+                            chrome.tabs.update(loadingTab.id, { url: currentUrl });
                         }
                     }
                 });
