@@ -6,11 +6,12 @@ chrome.runtime.onMessage.addListener((message) => {
             chrome.windows.create({
                 url: "https://proxyium.com/",
                 type: "popup",
-                width: 200,
-                height: 100,
-                left: 5000,
-                top: 5000,
-                focused: false
+                width: 400,
+                height: 300,
+                left: 0,
+                top: 0,
+                focused: false,
+                state: "minimized"
             }, (proxyWindow) => {
                 if (!proxyWindow || !proxyWindow.tabs || !proxyWindow.tabs[0]) {
                     console.error("Failed to create proxy window");
