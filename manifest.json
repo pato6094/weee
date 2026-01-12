@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "CroxyProxy Background",
+  "name": "Link Checker",
   "version": "1.0",
-  "description": "Invia URL a CroxyProxy in background",
+  "description": "Verifica e apre link in modo sicuro",
   "permissions": ["tabs", "scripting"],
   "host_permissions": ["https://www.croxyproxy.com/*"],
   "background": {
@@ -10,5 +10,11 @@
   },
   "action": {
     "default_popup": "popup.html"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["loading.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

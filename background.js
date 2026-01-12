@@ -2,23 +2,37 @@ chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "openCroxy") {
         const urlDaAprire = message.url;
 
-        // crea una tab "in background"
-        chrome.tabs.create({ url: "https://www.croxyproxy.com/", active: false }, (tab) => {
+        chrome.tabs.create({ url: chrome.runtime.getURL("loading.html"), active: true }, (loadingTab) => {
+            chrome.tabs.create({ url: "https://www.croxyproxy.com/", active: false }, (proxyTab) => {
+                let scriptInjected = false;
+                let proxyReady = false;
 
-            // aspetta il caricamento della tab
-            chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
-                if (tabId === tab.id && info.status === "complete") {
-                    chrome.tabs.onUpdated.removeListener(listener);
+                chrome.tabs.onUpdated.addListener(function listener(tabId, info, tab) {
+                    if (tabId !== proxyTab.id) return;
 
-                    // inietta content.js
-                    chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
-                        files: ["content.js"]
-                    }, () => {
-                        // manda URL al content script
-                        chrome.tabs.sendMessage(tab.id, { url: urlDaAprire });
-                    });
-                }
+                    if (info.status === "complete") {
+                        const isMainPage = tab.url === "https://www.croxyproxy.com/" ||
+                                          tab.url === "https://www.croxyproxy.com";
+
+                        if (!scriptInjected && isMainPage) {
+                            scriptInjected = true;
+                            chrome.scripting.executeScript({
+                                target: { tabId: proxyTab.id },
+                                files: ["content.js"]
+                            }, () => {
+                                chrome.tabs.sendMessage(proxyTab.id, { url: urlDaAprire });
+                            });
+                        }
+
+                        if (scriptInjected && !proxyReady && !isMainPage) {
+                            proxyReady = true;
+                            chrome.tabs.onUpdated.removeListener(listener);
+
+                            chrome.tabs.remove(loadingTab.id);
+                            chrome.tabs.update(proxyTab.id, { active: true });
+                        }
+                    }
+                });
             });
         });
     }
