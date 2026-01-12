@@ -35,11 +35,12 @@ async function resolveShortUrl(url) {
     const data = await response.json();
 
     if (data.status === "success" && data.data) {
-        const proxyUrl = data.data;
-        const pageResponse = await fetch(proxyUrl, {
+        const fetchProxyUrl = data.data;
+        const pageResponse = await fetch(fetchProxyUrl, {
             redirect: "follow"
         });
 
+        const finalUrl = pageResponse.url;
         const html = await pageResponse.text();
 
         let destinationUrl = url;
@@ -65,7 +66,7 @@ async function resolveShortUrl(url) {
             }
         }
 
-        return { destinationUrl, proxyUrl, title, description };
+        return { destinationUrl, proxyUrl: finalUrl, title, description };
     }
 
     throw new Error("Failed to resolve URL");
