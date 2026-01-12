@@ -75,4 +75,27 @@ function showResults(destinationUrl, title, description) {
     document.getElementById("previewSection").style.display = "block";
     document.getElementById("pageTitle").textContent = title || "-";
     document.getElementById("pageDescription").textContent = description || "-";
+
+    loadPreviewImage(destinationUrl);
+}
+
+function loadPreviewImage(url) {
+    const previewLoading = document.getElementById("previewLoading");
+    const previewImage = document.getElementById("previewImage");
+
+    previewLoading.style.display = "flex";
+    previewImage.style.display = "none";
+
+    const screenshotUrl = `https://image.thum.io/get/width/600/crop/400/${url}`;
+
+    previewImage.onload = () => {
+        previewLoading.style.display = "none";
+        previewImage.style.display = "block";
+    };
+
+    previewImage.onerror = () => {
+        previewLoading.innerHTML = '<span style="color: #999;">Preview not available</span>';
+    };
+
+    previewImage.src = screenshotUrl;
 }

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Link Checker",
+  "name": "SafeLink",
   "version": "1.0",
-  "description": "Verifica e apre link in modo sicuro",
+  "description": "Check short links safely before opening them",
   "permissions": ["tabs", "scripting"],
   "host_permissions": ["https://proxyium.com/*", "https://www.proxyium.com/*"],
   "background": {

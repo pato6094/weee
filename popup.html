@@ -294,6 +294,42 @@
       fill: #666;
     }
 
+    .preview-container {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      background: #f9f9f9;
+    }
+
+    .preview-image {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+
+    .preview-loading {
+      width: 100%;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 12px;
+    }
+
+    .preview-loading .mini-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #e0e0e0;
+      border-top-color: #ff8c42;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+
     .meta-section {
       padding-top: 8px;
     }
@@ -402,7 +438,14 @@
     </div>
 
     <div id="previewSection" style="display: none;">
-      <p class="section-title">Page info</p>
+      <p class="section-title">Page preview</p>
+      <div class="preview-container" id="previewContainer">
+        <div class="preview-loading" id="previewLoading">
+          <div class="mini-spinner"></div>
+          Loading preview...
+        </div>
+        <img class="preview-image" id="previewImage" style="display: none;" alt="Page preview">
+      </div>
       <div class="meta-section">
         <p class="meta-label">Title</p>
         <p class="meta-title" id="pageTitle">-</p>
