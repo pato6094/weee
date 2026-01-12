@@ -27,9 +27,10 @@ document.getElementById("url").addEventListener("keypress", (e) => {
 });
 
 document.getElementById("openBtn").addEventListener("click", () => {
-    const urlToOpen = currentProxyUrl || currentDestinationUrl;
+    const urlToOpen = currentDestinationUrl || currentShortUrl;
     if (urlToOpen) {
-        chrome.tabs.create({ url: urlToOpen });
+        const proxyiumUrl = `https://proxyium.com/?safelink_url=${encodeURIComponent(urlToOpen)}`;
+        chrome.tabs.create({ url: proxyiumUrl });
     }
 });
 

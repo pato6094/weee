@@ -11,6 +11,13 @@
   "action": {
     "default_popup": "popup.html"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://proxyium.com/*", "https://www.proxyium.com/*"],
+      "js": ["proxyium-inject.js"],
+      "run_at": "document_end"
+    }
+  ],
   "web_accessible_resources": [
     {
       "resources": ["loading.html", "overlay.js"],
