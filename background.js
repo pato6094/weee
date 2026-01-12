@@ -1,4 +1,25 @@
-chrome.runtime.onMessage.addListener((msg) => {
+let popupPort = null;
+
+chrome.runtime.onConnect.addListener((port) => {
+    if (port.name === "popup") {
+        popupPort = port;
+        port.onDisconnect.addListener(() => {
+            popupPort = null;
+        });
+    }
+});
+
+chrome.runtime.onMessage.addListener((msg, sender) => {
+    if (msg.action === "destinationResolved") {
+        chrome.runtime.sendMessage({
+            action: "linkResolved",
+            destinationUrl: msg.destinationUrl,
+            title: msg.title,
+            description: msg.description
+        });
+        return;
+    }
+
     if (msg.action !== "croxyGhost") return;
 
     const targetUrl = msg.url;

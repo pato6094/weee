@@ -51,7 +51,6 @@ chrome.runtime.onMessage.addListener((message) => {
     const button = document.querySelector('button[type="submit"]');
 
     if (!input || !button) {
-        console.error("Elements not found!");
         return;
     }
 
@@ -62,6 +61,31 @@ chrome.runtime.onMessage.addListener((message) => {
         button.click();
     }, 300);
 
+    function extractDestinationUrl() {
+        const urlInput = document.getElementById("__cpsUrl");
+        if (urlInput && urlInput.value) {
+            return urlInput.value;
+        }
+        return null;
+    }
+
+    function extractPageMetadata() {
+        let title = document.title || "";
+        let description = "";
+
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) {
+            description = metaDesc.getAttribute("content") || "";
+        }
+
+        const ogDesc = document.querySelector('meta[property="og:description"]');
+        if (!description && ogDesc) {
+            description = ogDesc.getAttribute("content") || "";
+        }
+
+        return { title, description };
+    }
+
     function removeProxyHeader() {
         const header = document.getElementById("__cpsHeader");
         if (header) {
@@ -69,10 +93,25 @@ chrome.runtime.onMessage.addListener((message) => {
         }
     }
 
-    removeProxyHeader();
+    let destinationSent = false;
 
     const observer = new MutationObserver(() => {
+        const destinationUrl = extractDestinationUrl();
+
+        if (destinationUrl && !destinationSent) {
+            destinationSent = true;
+            const metadata = extractPageMetadata();
+
+            chrome.runtime.sendMessage({
+                action: "destinationResolved",
+                destinationUrl: destinationUrl,
+                title: metadata.title,
+                description: metadata.description
+            });
+        }
+
         removeProxyHeader();
+
         const overlay = document.getElementById("proxy-loading-overlay");
         if (overlay && document.getElementById("__cpsHeader") === null && document.body) {
             setTimeout(() => {
@@ -85,4 +124,19 @@ chrome.runtime.onMessage.addListener((message) => {
         childList: true,
         subtree: true
     });
+
+    setTimeout(() => {
+        const destinationUrl = extractDestinationUrl();
+        if (destinationUrl && !destinationSent) {
+            destinationSent = true;
+            const metadata = extractPageMetadata();
+
+            chrome.runtime.sendMessage({
+                action: "destinationResolved",
+                destinationUrl: destinationUrl,
+                title: metadata.title,
+                description: metadata.description
+            });
+        }
+    }, 5000);
 });

@@ -2,44 +2,416 @@
 <html>
 <head>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      padding: 16px;
-      width: 280px;
-      background: #f5f5f5;
-    }
-    input {
-      width: 100%;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
+    * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
-    input:focus {
-      outline: none;
-      border-color: #4fc3f7;
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      width: 320px;
+      background: #fff;
+      overflow-x: hidden;
     }
-    button {
-      width: 100%;
-      padding: 10px 16px;
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
+
+    .header {
+      background: linear-gradient(135deg, #ff6b9d 0%, #ffa07a 50%, #ffb347 100%);
+      padding: 16px;
+      position: relative;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: #2d5a27;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+
+    .logo-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .header-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #333;
+      font-size: 16px;
+      padding: 4px;
+      opacity: 0.7;
+    }
+
+    .header-btn:hover {
+      opacity: 1;
+    }
+
+    .prompt-text {
+      text-align: center;
+      color: #333;
+      font-size: 15px;
+      line-height: 1.4;
+      margin-bottom: 16px;
+      padding: 0 10px;
+    }
+
+    .input-container {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 3px solid #ff8c42;
+      border-radius: 25px;
+      padding: 4px 6px 4px 16px;
+      margin: 0 4px;
+    }
+
+    .input-container input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 13px;
+      color: #333;
+      background: transparent;
+      padding: 8px 0;
+    }
+
+    .input-container input::placeholder {
+      color: #999;
+    }
+
+    .submit-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .submit-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: white;
+    }
+
+    .submit-btn:hover {
+      background: #333;
+    }
+
+    .results {
+      display: none;
+      padding: 0 16px 16px;
+    }
+
+    .results.show {
+      display: block;
+    }
+
+    .success-section {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .success-icon {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+
+    .success-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: #666;
+    }
+
+    .success-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .success-subtitle {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .url-box {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 3px solid #ff8c42;
+      border-radius: 25px;
+      padding: 6px 6px 6px 16px;
+      margin: 12px 4px 16px;
+      gap: 8px;
+    }
+
+    .url-box .check-icon {
+      width: 20px;
+      height: 20px;
+      background: #4caf50;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .url-box .check-icon svg {
+      width: 12px;
+      height: 12px;
+      stroke: white;
+      stroke-width: 3;
+      fill: none;
+    }
+
+    .url-box .url-text {
+      flex: 1;
+      font-size: 13px;
+      color: #333;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .open-btn {
+      background: #1a1a1a;
       color: white;
       border: none;
-      border-radius: 6px;
-      font-size: 14px;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 13px;
       cursor: pointer;
-      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
     }
-    button:hover {
-      opacity: 0.9;
+
+    .open-btn svg {
+      width: 12px;
+      height: 12px;
+      fill: white;
+    }
+
+    .open-btn:hover {
+      background: #333;
+    }
+
+    .revealed-section {
+      background: linear-gradient(135deg, #ff6b9d 0%, #ffa07a 100%);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+
+    .revealed-label {
+      font-size: 12px;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .revealed-url {
+      font-size: 13px;
+      color: #1a1a1a;
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    .section-title {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .scan-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .scan-link {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: #333;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .scan-link:hover {
+      background: #eee;
+    }
+
+    .scan-link svg {
+      width: 12px;
+      height: 12px;
+      fill: #666;
+    }
+
+    .meta-section {
+      padding-top: 8px;
+    }
+
+    .meta-label {
+      font-size: 11px;
+      color: #999;
+      margin-bottom: 2px;
+    }
+
+    .meta-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .meta-description {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f0f0f0;
+      border-top-color: #ff8c42;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <input id="url" type="text" placeholder="https://example.com">
-  <button id="go">Verifica Link</button>
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        </div>
+        <span class="logo-text">SafeLink</span>
+      </div>
+      <div class="header-buttons">
+        <button class="header-btn" title="Minimize">&#8212;</button>
+        <button class="header-btn" title="Close">&#10005;</button>
+      </div>
+    </div>
+
+    <p class="prompt-text" id="promptText">Paste a short link here and let us check it for you</p>
+
+    <div class="success-section" id="successSection" style="display: none;">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+          <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101"/>
+          <path d="M10.172 13.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+        </svg>
+      </div>
+      <h2 class="success-title">Woohoo! Your link is safe to open!</h2>
+      <p class="success-subtitle">We've checked it out, and you're good to go</p>
+    </div>
+
+    <div class="url-box" id="urlBox" style="display: none;">
+      <div class="check-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <span class="url-text" id="shortUrl"></span>
+      <button class="open-btn" id="openBtn">
+        Open
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <div class="input-container" id="inputContainer">
+      <input type="text" id="url" placeholder="https://cutt.ly/example">
+      <button class="submit-btn" id="go">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="loading" id="loading" style="display: none;">
+      <div class="spinner"></div>
+      <p>Checking link...</p>
+    </div>
+
+    <div class="revealed-section" id="revealedSection" style="display: none;">
+      <p class="revealed-label">Revealed link</p>
+      <p class="revealed-url" id="revealedUrl"></p>
+    </div>
+
+    <div id="scanSection" style="display: none;">
+      <p class="section-title">Scan result</p>
+      <div class="scan-links" id="scanLinks"></div>
+    </div>
+
+    <div id="previewSection" style="display: none;">
+      <p class="section-title">Page info</p>
+      <div class="meta-section">
+        <p class="meta-label">Title</p>
+        <p class="meta-title" id="pageTitle">-</p>
+        <p class="meta-label">Description</p>
+        <p class="meta-description" id="pageDescription">-</p>
+      </div>
+    </div>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>
