@@ -5,7 +5,11 @@ chrome.runtime.onMessage.addListener((message) => {
         chrome.tabs.create({ url: chrome.runtime.getURL("loading.html"), active: true }, (loadingTab) => {
             chrome.windows.create({
                 url: "https://proxyium.com/",
-                state: "minimized",
+                type: "popup",
+                width: 200,
+                height: 100,
+                left: 5000,
+                top: 5000,
                 focused: false
             }, (proxyWindow) => {
                 const proxyTabId = proxyWindow.tabs[0].id;
