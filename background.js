@@ -3,11 +3,16 @@ chrome.runtime.onMessage.addListener((message) => {
         const urlDaAprire = message.url;
 
         chrome.tabs.create({ url: chrome.runtime.getURL("loading.html"), active: true }, (loadingTab) => {
-            chrome.tabs.create({ url: "https://proxyium.com/", active: false }, (proxyTab) => {
+            chrome.windows.create({
+                url: "https://proxyium.com/",
+                state: "minimized",
+                focused: false
+            }, (proxyWindow) => {
+                const proxyTabId = proxyWindow.tabs[0].id;
                 let scriptInjected = false;
 
                 chrome.tabs.onUpdated.addListener(function listener(tabId, info, tab) {
-                    if (tabId !== proxyTab.id) return;
+                    if (tabId !== proxyTabId) return;
 
                     if (info.status === "complete") {
                         const currentUrl = tab.url || "";
@@ -23,16 +28,16 @@ chrome.runtime.onMessage.addListener((message) => {
                         if (!scriptInjected && isMainPage) {
                             scriptInjected = true;
                             chrome.scripting.executeScript({
-                                target: { tabId: proxyTab.id },
+                                target: { tabId: proxyTabId },
                                 files: ["content.js"]
                             }, () => {
-                                chrome.tabs.sendMessage(proxyTab.id, { url: urlDaAprire });
+                                chrome.tabs.sendMessage(proxyTabId, { url: urlDaAprire });
                             });
                         }
 
                         if (scriptInjected && !isProxyDomain && !isExtensionPage && currentUrl !== "") {
                             chrome.tabs.onUpdated.removeListener(listener);
-                            chrome.tabs.remove(proxyTab.id);
+                            chrome.windows.remove(proxyWindow.id);
                             chrome.tabs.update(loadingTab.id, { url: currentUrl });
                         }
                     }
