@@ -63,7 +63,7 @@ chrome.runtime.onMessage.addListener((message) => {
     }, 300);
 
     function removeProxyHeader() {
-        const header = document.getElementById("__cpsHeaderBody");
+        const header = document.getElementById("__cpsHeader");
         if (header) {
             header.remove();
         }
@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener((message) => {
     const observer = new MutationObserver(() => {
         removeProxyHeader();
         const overlay = document.getElementById("proxy-loading-overlay");
-        if (overlay && document.getElementById("__cpsHeaderBody") === null && document.body) {
+        if (overlay && document.getElementById("__cpsHeader") === null && document.body) {
             setTimeout(() => {
                 overlay.remove();
             }, 500);
