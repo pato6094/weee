@@ -13,7 +13,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["loading.html"],
+      "resources": ["loading.html", "overlay.js"],
       "matches": ["<all_urls>"]
     }
   ]
