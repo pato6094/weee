@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "CroxyProxy Background",
+  "version": "1.0",
+  "description": "Invia URL a CroxyProxy in background",
+  "permissions": ["tabs", "scripting"],
+  "host_permissions": ["https://www.croxyproxy.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
