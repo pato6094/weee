@@ -7,8 +7,31 @@
         return;
     }
 
-    const encodedUrl = encodeURIComponent(targetUrl);
-    window.location.href = 'https://eu1.proxyium.com/proxy?cdURL=' + encodedUrl;
+    try {
+        const SUPABASE_URL = 'https://zvuxdphglfwcqmalyvgc.supabase.co';
+        const proxyUrl = `${SUPABASE_URL}/functions/v1/proxy`;
+
+        const response = await fetch(proxyUrl, {
+            method: 'GET',
+            headers: {
+                'X-Target-Url': targetUrl
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Proxy request failed');
+        }
+
+        const html = await response.text();
+
+        // Write the proxied content to the page
+        document.open();
+        document.write(html);
+        document.close();
+
+    } catch (err) {
+        showError('Connection failed: ' + err.message);
+    }
 
     function showError(msg) {
         document.getElementById('error').textContent = msg;
