@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "Check short links safely before opening them",
   "permissions": ["tabs", "scripting"],
-  "host_permissions": ["https://proxyium.com/*", "https://www.proxyium.com/*"],
+  "host_permissions": ["https://proxyium.com/*", "https://www.proxyium.com/*", "https://cdn.proxyium.com/*", "https://*.proxyium.com/*"],
   "background": {
     "service_worker": "background.js"
   },
