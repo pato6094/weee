@@ -61,4 +61,28 @@ chrome.runtime.onMessage.addListener((message) => {
     setTimeout(() => {
         button.click();
     }, 300);
+
+    function removeProxyHeader() {
+        const header = document.getElementById("__cpsHeaderBody");
+        if (header) {
+            header.remove();
+        }
+    }
+
+    removeProxyHeader();
+
+    const observer = new MutationObserver(() => {
+        removeProxyHeader();
+        const overlay = document.getElementById("proxy-loading-overlay");
+        if (overlay && document.getElementById("__cpsHeaderBody") === null && document.body) {
+            setTimeout(() => {
+                overlay.remove();
+            }, 500);
+        }
+    });
+
+    observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true
+    });
 });
