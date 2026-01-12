@@ -1,8 +1,8 @@
 chrome.runtime.onMessage.addListener((message) => {
     const urlDaAprire = message.url;
 
-    const inputXPath = "/html/body/div[2]/div/div/div/div[2]/div[2]/form/div/div/div/div/input";
-    const buttonXPath = "/html/body/div[2]/div/div/div/div[2]/div[2]/form/div/span/button";
+    const inputXPath = "/html/body/main/div/div/div[2]/div/div[2]/form/div[2]/input";
+    const buttonXPath = "/html/body/main/div/div/div[2]/div/div[2]/form/div[2]/button";
 
     const input = document.evaluate(
         inputXPath,

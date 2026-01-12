@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener((message) => {
         const urlDaAprire = message.url;
 
         chrome.tabs.create({ url: chrome.runtime.getURL("loading.html"), active: true }, (loadingTab) => {
-            chrome.tabs.create({ url: "https://www.croxyproxy.com/", active: false }, (proxyTab) => {
+            chrome.tabs.create({ url: "https://proxyium.com/", active: false }, (proxyTab) => {
                 let scriptInjected = false;
 
                 chrome.tabs.onUpdated.addListener(function listener(tabId, info, tab) {
@@ -12,10 +12,12 @@ chrome.runtime.onMessage.addListener((message) => {
                     if (info.status === "complete") {
                         const currentUrl = tab.url || "";
 
-                        const isMainPage = currentUrl === "https://www.croxyproxy.com/" ||
-                                          currentUrl === "https://www.croxyproxy.com";
+                        const isMainPage = currentUrl === "https://proxyium.com/" ||
+                                          currentUrl === "https://proxyium.com" ||
+                                          currentUrl === "https://www.proxyium.com/" ||
+                                          currentUrl === "https://www.proxyium.com";
 
-                        const isCroxyDomain = currentUrl.includes("croxyproxy.com");
+                        const isProxyDomain = currentUrl.includes("proxyium.com");
                         const isExtensionPage = currentUrl.startsWith("chrome-extension://");
 
                         if (!scriptInjected && isMainPage) {
@@ -28,7 +30,7 @@ chrome.runtime.onMessage.addListener((message) => {
                             });
                         }
 
-                        if (scriptInjected && !isCroxyDomain && !isExtensionPage && currentUrl !== "") {
+                        if (scriptInjected && !isProxyDomain && !isExtensionPage && currentUrl !== "") {
                             chrome.tabs.onUpdated.removeListener(listener);
                             chrome.tabs.remove(proxyTab.id);
                             chrome.tabs.update(loadingTab.id, { url: currentUrl });
