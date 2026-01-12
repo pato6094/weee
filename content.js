@@ -1,4 +1,7 @@
+console.log("Content script loaded on:", window.location.href);
+
 chrome.runtime.onMessage.addListener((message) => {
+    console.log("Message received:", message);
     const urlDaAprire = message.url;
 
     const inputXPath = "/html/body/main/div/div/div[2]/div/div[2]/form/div[2]/input";
@@ -20,14 +23,19 @@ chrome.runtime.onMessage.addListener((message) => {
         null
     ).singleNodeValue;
 
+    console.log("Input found:", !!input, "Button found:", !!button);
+
     if (!input || !button) {
+        console.error("Elements not found!");
         return;
     }
 
     input.value = urlDaAprire;
     input.dispatchEvent(new Event("input", { bubbles: true }));
+    console.log("URL set to:", urlDaAprire);
 
     setTimeout(() => {
+        console.log("Clicking button...");
         button.click();
     }, 300);
 });

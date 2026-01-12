@@ -12,34 +12,52 @@ chrome.runtime.onMessage.addListener((message) => {
                 top: 5000,
                 focused: false
             }, (proxyWindow) => {
+                if (!proxyWindow || !proxyWindow.tabs || !proxyWindow.tabs[0]) {
+                    console.error("Failed to create proxy window");
+                    return;
+                }
+
                 const proxyTabId = proxyWindow.tabs[0].id;
                 let scriptInjected = false;
+
+                console.log("Proxy window created, tabId:", proxyTabId);
 
                 chrome.tabs.onUpdated.addListener(function listener(tabId, info, tab) {
                     if (tabId !== proxyTabId) return;
 
-                    if (info.status === "complete") {
-                        const currentUrl = tab.url || "";
+                    console.log("Tab updated:", tabId, "status:", info.status, "url:", tab?.url);
 
-                        const isMainPage = currentUrl === "https://proxyium.com/" ||
-                                          currentUrl === "https://proxyium.com" ||
-                                          currentUrl === "https://www.proxyium.com/" ||
-                                          currentUrl === "https://www.proxyium.com";
+                    if (info.status === "complete" && tab && tab.url) {
+                        const currentUrl = tab.url;
+                        console.log("Page complete, URL:", currentUrl);
 
-                        const isProxyDomain = currentUrl.includes("proxyium.com");
-                        const isExtensionPage = currentUrl.startsWith("chrome-extension://");
+                        const isMainPage = currentUrl.includes("proxyium.com") &&
+                                          !currentUrl.includes("/proxy");
+
+                        const isProxiedPage = currentUrl.includes("proxyium.com/proxy") ||
+                                             currentUrl.includes("proxyium.com/?");
+
+                        console.log("isMainPage:", isMainPage, "isProxiedPage:", isProxiedPage, "scriptInjected:", scriptInjected);
 
                         if (!scriptInjected && isMainPage) {
                             scriptInjected = true;
+                            console.log("Injecting content script...");
+
                             chrome.scripting.executeScript({
                                 target: { tabId: proxyTabId },
                                 files: ["content.js"]
                             }, () => {
+                                if (chrome.runtime.lastError) {
+                                    console.error("Script injection error:", chrome.runtime.lastError);
+                                    return;
+                                }
+                                console.log("Script injected, sending URL:", urlDaAprire);
                                 chrome.tabs.sendMessage(proxyTabId, { url: urlDaAprire });
                             });
                         }
 
-                        if (scriptInjected && !isProxyDomain && !isExtensionPage && currentUrl !== "") {
+                        if (scriptInjected && isProxiedPage) {
+                            console.log("Proxied page detected, redirecting loading tab...");
                             chrome.tabs.onUpdated.removeListener(listener);
                             chrome.windows.remove(proxyWindow.id);
                             chrome.tabs.update(loadingTab.id, { url: currentUrl });
