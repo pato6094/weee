@@ -29,8 +29,8 @@ document.getElementById("url").addEventListener("keypress", (e) => {
 document.getElementById("openBtn").addEventListener("click", () => {
     const urlToOpen = currentDestinationUrl || currentShortUrl;
     if (urlToOpen) {
-        const proxyiumUrl = `https://proxyium.com/?safelink_url=${encodeURIComponent(urlToOpen)}`;
-        chrome.tabs.create({ url: proxyiumUrl });
+        const redirectUrl = chrome.runtime.getURL(`redirect.html?url=${encodeURIComponent(urlToOpen)}`);
+        chrome.tabs.create({ url: redirectUrl });
     }
 });
 

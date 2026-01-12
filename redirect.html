@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Opening via Proxy...</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .container { text-align: center; padding: 40px; }
+    .spinner {
+      width: 60px; height: 60px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-left-color: #4fc3f7;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 30px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    h1 { font-size: 24px; font-weight: 500; margin-bottom: 12px; }
+    .subtitle { font-size: 14px; color: rgba(255,255,255,0.6); }
+    .error { color: #ff6b6b; margin-top: 20px; display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="spinner"></div>
+    <h1>Connecting via Proxy...</h1>
+    <p class="subtitle">Redirecting in a moment</p>
+    <p class="error" id="error"></p>
+  </div>
+  <script>
+    (async function() {
+      const params = new URLSearchParams(window.location.search);
+      const targetUrl = params.get('url');
+
+      if (!targetUrl) {
+        showError('No URL provided');
+        return;
+      }
+
+      try {
+        const formData = new FormData();
+        formData.append('url', targetUrl);
+        formData.append('server', 'eu1');
+
+        const response = await fetch('https://cdn.proxyium.com/proxyrequest.php', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.data) {
+          window.location.href = data.data;
+        } else {
+          showError('Could not get proxy URL');
+        }
+      } catch (err) {
+        showError('Connection failed: ' + err.message);
+      }
+
+      function showError(msg) {
+        document.getElementById('error').textContent = msg;
+        document.getElementById('error').style.display = 'block';
+        document.querySelector('.spinner').style.display = 'none';
+      }
+    })();
+  </script>
+</body>
+</html>
