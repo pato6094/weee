@@ -20,7 +20,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["loading.html", "overlay.js", "redirect.html"],
+      "resources": ["loading.html", "overlay.js", "redirect.html", "redirect.js"],
       "matches": ["<all_urls>"]
     }
   ]
